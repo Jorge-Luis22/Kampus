@@ -1,0 +1,14 @@
+CÓDIGO FUENTE DEL FORMULARIO (para quien quiera modificarlo)
+
+Los 3 archivos que se usan (index.html, Code.gs, README.md, en la carpeta de arriba) se GENERAN desde aquí:
+
+  src/schema.py            <- AQUÍ están las preguntas. Es la única fuente: de aquí salen el HTML, el Code.gs y las columnas.
+  src/index.template.html  <- diseño y lógica del formulario
+  src/Code.template.gs     <- programa de Google Apps Script
+  src/README.template.md   <- la guía
+
+Para regenerar:      python3 build.py          (crea la carpeta dist/ con los 3 archivos; cópialos a la carpeta de arriba)
+Pruebas:             node test/server.test.js   (Code.gs contra una simulación de Google)
+                     node test/coherence.js     (HTML = Code.gs = hoja = README)
+                     node test/e2e.js           (navegador real; necesita Playwright: npm i playwright)
+Estas pruebas usan una SIMULACIÓN de Google. No reemplazan probar con tu hoja real (README del formulario, paso 7).
