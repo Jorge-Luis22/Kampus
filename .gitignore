@@ -1,0 +1,12 @@
+# Lo que se genera o no debe subirse
+formulario/fuente/dist/
+formulario/fuente/shots/
+**/__pycache__/
+node_modules/
+*.zip
+
+# El logo es marca de la UTP: no se sube al repositorio
+logo-utp.png
+logo-utp.*
+.DS_Store
+Thumbs.db
