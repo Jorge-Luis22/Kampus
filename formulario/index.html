@@ -1,0 +1,1218 @@
+<!doctype html>
+<html lang="es" data-motion="full">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#000000">
+<meta name="robots" content="noindex, nofollow">
+<title>Encuesta para estudiantes de la UTP</title>
+<meta name="description" content="Encuesta de estudiantes sobre cómo se conocen, se ayudan y se enteran de lo que pasa entre carreras y ciclos en la UTP.">
+
+<style>
+/* =====================================================================
+   1. Variables de diseño
+   Rojo / blanco / negro / grises. Para cambiar el rojo, edita --red.
+   ===================================================================== */
+:root {
+  --red: #E4002B;          /* relleno: botones, nodos (texto blanco encima: 4.85:1) */
+  --red-strong: #C8102E;   /* rojo para texto sobre blanco (5.9:1) */
+  --red-soft: #FDECEF;     /* fondo de opción elegida */
+  --black: #000000;
+
+  --bg: #F4F4F5;
+  --card: #FFFFFF;
+  --text: #17171A;
+  --text-2: #3F3F46;
+  --muted: #5F5F68;
+  --line: #E4E4E7;
+  --line-strong: #CFCFD6;
+  --track: #D9D9DF;
+  --focus: #17171A;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  --r-card: 24px;
+  --r-opt: 14px;
+  --shadow-card: 0 1px 2px rgba(23, 23, 26, .06), 0 14px 36px -12px rgba(23, 23, 26, .16);
+
+  --font: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --red-strong: #FF5A6E;
+    --red-soft: rgba(228, 0, 43, .16);
+    --bg: #0A0A0B;
+    --card: #17171A;
+    --text: #F4F4F5;
+    --text-2: #D4D4D8;
+    --muted: #A1A1AA;
+    --line: #2A2A2F;
+    --line-strong: #3C3C43;
+    --track: #34343A;
+    --focus: #F4F4F5;
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, .5), 0 14px 36px -12px rgba(0, 0, 0, .7);
+  }
+}
+
+/* =====================================================================
+   2. Base
+   ===================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 1rem/1.5 var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+[hidden] { display: none !important; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip {
+  position: absolute; left: 12px; top: -48px; z-index: 50;
+  background: var(--card); color: var(--text); padding: 10px 14px; border-radius: 10px;
+  text-decoration: none; font-weight: 600;
+}
+.skip:focus { top: 12px; }
+
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+/* =====================================================================
+   3. Encabezado institucional
+   ===================================================================== */
+.topbar {
+  background: var(--black);
+  color: #fff;
+  border-bottom: 3px solid var(--red);
+  padding-top: env(safe-area-inset-top);
+}
+.topbar-in {
+  max-width: 960px; margin: 0 auto; padding: 10px 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.logo-slot {
+  position: relative; flex: none; width: 44px; height: 44px; border-radius: 10px;
+  background: #fff; display: grid; place-items: center; overflow: hidden;
+}
+.logo-slot img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.logo-ph {
+  display: none; font-size: .6875rem; font-weight: 700; color: #5F5F68; text-align: center; line-height: 1.1;
+}
+.logo-slot.empty { background: transparent; outline: 1.5px dashed rgba(255,255,255,.45); outline-offset: -1.5px; }
+.logo-slot.empty img { display: none; }
+.logo-slot.empty .logo-ph { display: block; color: rgba(255,255,255,.75); }
+.brand-name { font-weight: 700; font-size: .9375rem; line-height: 1.2; letter-spacing: -0.005em; }
+
+.motion-btn {
+  flex: none; display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.35);
+  border-radius: 999px; padding: 7px 12px; font-size: .8125rem; font-weight: 600;
+  transition: background-color .16s ease, border-color .16s ease, transform .16s var(--ease-out);
+}
+.motion-btn:active { transform: scale(.97); }
+.motion-btn[aria-pressed="true"] { background: #fff; color: #000; border-color: #fff; }
+.motion-btn svg { width: 16px; height: 16px; }
+.motion-btn .lbl { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .motion-btn:hover { border-color: #fff; }
+}
+@media (min-width: 560px) { .motion-btn .lbl { display: inline; } .brand-name { font-size: 1.0625rem; } }
+
+/* =====================================================================
+   4. Progreso: una "ruta" de nodos, uno por sección visible
+   ===================================================================== */
+.progress { max-width: 720px; width: 100%; margin: 0 auto; padding: 18px 16px 0; }
+.progress-in { display: flex; align-items: center; gap: 14px; }
+.route { flex: 1; display: flex; align-items: center; list-style: none; margin: 0; padding: 0; min-width: 0; }
+.route li { display: flex; align-items: center; flex: 1 1 0; min-width: 0; }
+.route li:last-child { flex: 0 0 auto; }
+.dot {
+  flex: none; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--card); box-shadow: inset 0 0 0 3px var(--track);
+  transition: background-color .25s var(--ease-out), box-shadow .25s var(--ease-out), transform .25s var(--ease-out);
+}
+.route li.is-started .dot { background: var(--red); box-shadow: inset 0 0 0 3px var(--red); }
+.route li.is-current .dot { background: var(--card); box-shadow: inset 0 0 0 4px var(--red); transform: scale(1.25); }
+.bar { flex: 1; height: 4px; margin: 0 5px; background: var(--track); border-radius: 2px; overflow: hidden; }
+.fill {
+  display: block; height: 100%; background: var(--red); transform-origin: left center;
+  transform: scaleX(var(--p, 0)); transition: transform .45s var(--ease-out);
+}
+.pct { flex: none; min-width: 3ch; text-align: right; font-size: .8125rem; font-weight: 700; color: var(--text-2); font-variant-numeric: tabular-nums; }
+
+/* =====================================================================
+   5. Contenedor principal y transición entre pantallas
+   ===================================================================== */
+main { flex: 1; width: 100%; max-width: 960px; margin: 0 auto; padding: 18px 16px 8px; }
+.stage { display: grid; }
+.stage > .view { grid-area: 1 / 1; min-width: 0; }
+.view.in-right { animation: inRight .26s var(--ease-out) both; }
+.view.in-left  { animation: inLeft .26s var(--ease-out) both; }
+.view.leaving { pointer-events: none; }
+.view.out-left  { animation: outLeft .18s var(--ease-out) both; }
+.view.out-right { animation: outRight .18s var(--ease-out) both; }
+@keyframes inRight  { from { opacity: 0; transform: translateX(28px); }  to { opacity: 1; transform: none; } }
+@keyframes inLeft   { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+@keyframes outLeft  { to { opacity: 0; transform: translateX(-28px); } }
+@keyframes outRight { to { opacity: 0; transform: translateX(28px); } }
+
+.col { max-width: 720px; margin: 0 auto; }
+
+/* =====================================================================
+   6. Pantalla inicial
+   ===================================================================== */
+.welcome { max-width: 960px; margin: 0 auto; }
+.hero {
+  background: var(--black); color: #fff; border-radius: 28px 28px 0 0; overflow: hidden;
+  display: grid; gap: 8px; padding: 36px 24px 8px;
+  border-top: 6px solid var(--red);
+}
+.hero h1 {
+  font: 800 clamp(2rem, 7.4vw, 3.5rem)/1.02 var(--font-display);
+  letter-spacing: -0.035em; max-width: 14ch; text-wrap: balance;
+}
+.lead { margin-top: 16px; color: rgba(255,255,255,.82); font-size: 1.0625rem; line-height: 1.5; max-width: 38ch; }
+.net { width: 100%; height: auto; display: block; max-height: 300px; margin-top: 8px; }
+.net .edge { fill: none; stroke: rgba(255,255,255,.32); stroke-width: 1.5; stroke-linecap: round; }
+.net .edge.hl { stroke: var(--red); stroke-width: 3.5; }
+.net .node { fill: #fff; transform-box: fill-box; transform-origin: center; }
+.net .node.hl { fill: var(--red); }
+.net .edge { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .8s var(--ease-out) forwards; animation-delay: calc(var(--i) * 90ms + 200ms); }
+.net .node { opacity: 0; animation: pop .4s var(--ease-out) forwards; animation-delay: calc(var(--i) * 90ms + 350ms); }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes pop { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: none; } }
+
+.sheet {
+  background: var(--card); border-radius: 0 0 28px 28px; box-shadow: var(--shadow-card);
+  padding: 28px 24px 28px; display: grid; gap: 22px;
+}
+.facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.facts li { display: flex; align-items: center; gap: 14px; color: var(--text-2); font-size: 1rem; }
+.fact-ic {
+  flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--red-soft);
+  display: grid; place-items: center; color: var(--red-strong);
+}
+.fact-ic svg { width: 22px; height: 22px; }
+.fine { color: var(--muted); font-size: .875rem; }
+.cta-box { display: grid; }
+.cta-box .btn { width: 100%; }
+.config-warn {
+  border-left: 4px solid var(--red); background: var(--red-soft); color: var(--text);
+  padding: 12px 14px; border-radius: 10px; font-size: .9375rem;
+}
+@media (min-width: 820px) {
+  .hero { grid-template-columns: 1.1fr .9fr; align-items: center; padding: 56px 48px 40px; gap: 24px; }
+  .net { margin: 0; max-height: none; }
+  .sheet { grid-template-columns: 1fr auto; align-items: center; padding: 32px 48px; gap: 28px 48px; }
+  .sheet .facts { grid-column: 1; }
+  .sheet .cta-box { grid-column: 2; grid-row: 1 / span 2; display: grid; gap: 14px; justify-items: stretch; }
+  .sheet .fine { grid-column: 1; }
+}
+
+/* =====================================================================
+   7. Botones
+   ===================================================================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 52px; padding: 0 28px; border-radius: 999px; border: 1.5px solid transparent;
+  font-weight: 700; font-size: 1rem; letter-spacing: -0.005em;
+  transition: transform .16s var(--ease-out), background-color .16s ease, border-color .16s ease, color .16s ease, opacity .16s ease;
+}
+.btn:active:not(:disabled) { transform: scale(.97); }
+.btn:disabled { cursor: not-allowed; }
+.btn-primary { background: var(--red); color: #fff; }
+.btn-primary:disabled { opacity: .72; }
+.btn-ghost { background: transparent; color: var(--text-2); border-color: var(--line-strong); }
+.btn-ghost:disabled { opacity: .45; }
+.btn-lg { min-height: 58px; font-size: 1.125rem; padding: 0 36px; }
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover:not(:disabled) { background: #BE0023; }
+  .btn-ghost:hover:not(:disabled) { border-color: var(--text-2); color: var(--text); }
+}
+.spinner {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2.5px solid rgba(255,255,255,.4); border-top-color: #fff; animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* =====================================================================
+   8. Pantalla de pregunta
+   ===================================================================== */
+.step-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.sec { display: inline-flex; align-items: center; gap: 10px; min-width: 0; font-weight: 700; font-size: .9375rem; color: var(--text-2); }
+.sec-ic {
+  flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--red); color: #fff;
+  display: grid; place-items: center;
+}
+.sec-ic svg { width: 17px; height: 17px; }
+.count { flex: none; color: var(--muted); font-size: .875rem; font-variant-numeric: tabular-nums; }
+
+.card { background: var(--card); border-radius: var(--r-card); box-shadow: var(--shadow-card); padding: 22px 20px 24px; }
+@media (min-width: 560px) { .card { padding: 32px 32px 34px; } }
+.tag {
+  display: inline-block; margin-bottom: 12px; padding: 3px 10px; border-radius: 999px;
+  background: var(--red-soft); color: var(--red-strong); font-size: .8125rem; font-weight: 700;
+}
+.context { margin-bottom: 10px; color: var(--muted); font-size: .9375rem; }
+.context b { color: var(--text-2); font-weight: 600; }
+.q-title {
+  font: 760 clamp(1.3rem, 4.2vw, 1.85rem)/1.2 var(--font-display);
+  letter-spacing: -0.02em; text-wrap: balance;
+}
+.q-title:focus { outline: none; }
+.hint { margin-top: 8px; color: var(--muted); font-size: .9375rem; }
+.field { margin-top: 22px; display: grid; gap: 10px; }
+
+.input, .select, .textarea {
+  width: 100%; background: var(--card); color: var(--text);
+  border: 1.5px solid var(--line-strong); border-radius: var(--r-opt);
+  padding: 14px 16px; font-size: 1.0625rem; line-height: 1.4;
+  transition: border-color .16s ease, box-shadow .16s ease;
+}
+.textarea { min-height: 128px; resize: vertical; }
+.input::placeholder, .textarea::placeholder { color: var(--muted); opacity: .85; }
+.input:focus, .select:focus, .textarea:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 4px var(--red-soft); }
+.input.is-bad, .select.is-bad, .textarea.is-bad { border-color: var(--red); }
+.num {
+  max-width: 14ch; font: 760 clamp(1.75rem, 7vw, 2.5rem)/1.1 var(--font-display);
+  font-variant-numeric: tabular-nums; padding: 12px 18px; letter-spacing: -0.02em;
+}
+.select {
+  appearance: none; -webkit-appearance: none; padding-right: 48px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%235F5F68' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 16px center;
+}
+.counter { justify-self: end; color: var(--muted); font-size: .8125rem; font-variant-numeric: tabular-nums; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  background: transparent; border: 1.5px solid var(--line-strong); color: var(--text-2);
+  border-radius: 999px; padding: 8px 14px; font-size: .9375rem; font-weight: 600;
+  transition: transform .16s var(--ease-out), border-color .16s ease, background-color .16s ease;
+}
+.chip:active { transform: scale(.97); }
+@media (hover: hover) and (pointer: fine) { .chip:hover { border-color: var(--text-2); background: var(--bg); } }
+
+/* Opciones (radio y casillas) */
+.opts { display: grid; gap: 10px; }
+.opt { position: relative; display: block; cursor: pointer; }
+.opt input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.opt-body {
+  display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 12px 16px;
+  border: 1.5px solid var(--line-strong); border-radius: var(--r-opt); background: var(--card);
+  font-size: 1.0625rem; line-height: 1.35;
+  transition: transform .16s var(--ease-out), border-color .16s ease, background-color .16s ease;
+}
+.opt-text { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.opt-text::first-letter { text-transform: uppercase; }
+.mark {
+  flex: none; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line-strong);
+  display: grid; place-items: center; background: var(--card);
+  transition: background-color .16s ease, border-color .16s ease;
+}
+.mark svg { width: 14px; height: 14px; stroke: #fff; opacity: 0; transition: opacity .12s ease; }
+.opt.is-check .mark { border-radius: 7px; }
+.opt:active input:not(:disabled) + .opt-body { transform: scale(.985); }
+.opt input:checked + .opt-body { border-color: var(--red); background: var(--red-soft); }
+.opt input:checked + .opt-body .mark { background: var(--red); border-color: var(--red); }
+.opt input:checked + .opt-body .mark svg { opacity: 1; }
+.opt input:focus-visible + .opt-body { outline: 3px solid var(--focus); outline-offset: 3px; }
+.opt input:disabled + .opt-body { opacity: .45; cursor: not-allowed; }
+.opt input:disabled { cursor: not-allowed; }
+@media (hover: hover) and (pointer: fine) {
+  .opt input:not(:checked):not(:disabled) + .opt-body:hover { border-color: var(--text-2); }
+}
+.other-in { margin-top: 2px; }
+
+.error {
+  display: none; align-items: flex-start; gap: 10px; margin-top: 18px; padding: 12px 14px;
+  border-left: 4px solid var(--red); background: var(--red-soft); border-radius: 10px;
+  color: var(--text); font-size: .9375rem; font-weight: 600;
+}
+.error.show { display: flex; scroll-margin-bottom: 120px; }
+.error.shake { animation: shake .32s var(--ease-out); }
+.error svg { flex: none; width: 20px; height: 20px; color: var(--red-strong); margin-top: 1px; }
+.error small { display: block; margin-top: 4px; color: var(--muted); font-weight: 400; font-size: .8125rem; }
+@keyframes shake { 20% { transform: translateX(-6px); } 45% { transform: translateX(5px); } 70% { transform: translateX(-3px); } 100% { transform: none; } }
+
+.idea {
+  margin-top: 22px; padding: 22px 22px 22px 24px; border-radius: 16px; background: var(--bg);
+  border-left: 6px solid var(--red); font-size: 1.125rem; line-height: 1.55; color: var(--text);
+}
+
+.actions {
+  position: sticky; bottom: 0; z-index: 5; display: flex; justify-content: space-between; gap: 12px;
+  margin-top: 18px; padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--bg) 72%, transparent);
+}
+.actions .btn-primary { flex: 1; max-width: 280px; }
+@media (max-width: 420px) { .actions .btn { padding: 0 20px; } .actions .btn-primary { max-width: none; } }
+
+/* =====================================================================
+   9. Pantalla de éxito
+   ===================================================================== */
+.done-card { text-align: center; display: grid; justify-items: center; gap: 12px; padding: 36px 24px 32px; }
+.done-svg { width: min(240px, 62vw); height: auto; display: block; }
+.done-svg .spoke { fill: none; stroke: var(--line-strong); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .5s var(--ease-out) forwards; animation-delay: calc(var(--i) * 70ms + 450ms); }
+.done-svg .sat { fill: var(--text); transform-box: fill-box; transform-origin: center; opacity: 0; animation: pop .4s var(--ease-out) forwards; animation-delay: calc(var(--i) * 70ms + 650ms); }
+.done-svg .core { fill: var(--red); transform-box: fill-box; transform-origin: center; animation: pop .45s var(--ease-out) both; }
+.done-svg .tick { fill: none; stroke: #fff; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .45s var(--ease-out) .25s forwards; }
+.done-card h1 { font: 800 clamp(1.7rem, 6vw, 2.4rem)/1.1 var(--font-display); letter-spacing: -0.03em; }
+.done-card p { color: var(--text-2); max-width: 42ch; }
+.code { color: var(--muted); font-size: .875rem; }
+.code b { color: var(--text-2); font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+.done-card .btn { margin-top: 10px; }
+
+/* =====================================================================
+   10. Pie y honeypot
+   ===================================================================== */
+.foot { padding: 18px 16px calc(24px + env(safe-area-inset-bottom)); text-align: center; color: var(--muted); font-size: .8125rem; }
+.hp { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+/* =====================================================================
+   11. Movimiento reducido (preferencia del sistema o botón del encabezado)
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+html[data-motion="reduced"] *, html[data-motion="reduced"] *::before, html[data-motion="reduced"] *::after {
+  animation-duration: .001ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important;
+}
+</style>
+</head>
+
+<body>
+<a class="skip" href="#main">Saltar al contenido</a>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <!-- Espacio para el logotipo institucional: guarda el archivo como "logo-utp.png" junto a este index.html -->
+      <span class="logo-slot" id="logoSlot">
+        <img src="logo-utp.png" alt="Logotipo de la UTP" width="44" height="44" onerror="this.parentNode.classList.add('empty')">
+        <span class="logo-ph" aria-hidden="true">Logo<br>UTP</span>
+      </span>
+      <span class="brand-name">Universidad Tecnológica del Perú</span>
+    </div>
+    <button type="button" class="motion-btn" id="motionBtn" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3l14 9-14 9z"/></svg>
+      <span class="lbl" id="motionLbl">Reducir animaciones</span>
+      <span class="sr-only" id="motionSr"></span>
+    </button>
+  </div>
+</header>
+
+<div class="progress" id="progress" hidden>
+  <div class="progress-in" role="progressbar" id="pbar" aria-label="Avance de la encuesta" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <ol class="route" id="route" aria-hidden="true"></ol>
+    <span class="pct" id="pct" aria-hidden="true">0%</span>
+  </div>
+</div>
+
+<main id="main" tabindex="-1">
+  <div class="stage" id="stage"></div>
+</main>
+
+<footer class="foot">Proyecto académico de estudiantes. No es un sitio oficial de la Universidad Tecnológica del Perú.</footer>
+
+<!-- Trampa para bots: las personas no la ven ni la llenan -->
+<div class="hp" aria-hidden="true">
+  <label>No llenar este campo <input type="text" id="hp" name="ref_codigo_alt" tabindex="-1" autocomplete="off"></label>
+</div>
+
+<div class="sr-only" id="live" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ================= Plantillas de pantallas ================= -->
+<template id="tpl-welcome">
+  <section class="welcome" aria-labelledby="wTitle">
+    <div class="hero">
+      <div>
+        <h1 id="wTitle">Cuéntanos cómo te conectas en la UTP</h1>
+        <p class="lead">Una encuesta hecha por estudiantes para entender cómo se conocen, se ayudan y se enteran de lo que pasa entre carreras y ciclos.</p>
+      </div>
+      <svg class="net" viewBox="0 0 420 300" role="img" aria-label="Ilustración: alumnos de distintas carreras conectados entre sí"><path class="edge" d="M60 60L120 130" pathLength="1" style="--i:0"/><path class="edge hl" d="M50 230L120 130" pathLength="1" style="--i:1"/><path class="edge hl" d="M120 130L215 200" pathLength="1" style="--i:2"/><path class="edge hl" d="M215 200L370 190" pathLength="1" style="--i:3"/><path class="edge" d="M120 130L200 50" pathLength="1" style="--i:4"/><path class="edge" d="M200 50L300 90" pathLength="1" style="--i:5"/><path class="edge" d="M215 200L300 90" pathLength="1" style="--i:6"/><path class="edge" d="M300 90L370 190" pathLength="1" style="--i:7"/><path class="edge" d="M215 200L310 265" pathLength="1" style="--i:8"/><path class="edge" d="M370 190L310 265" pathLength="1" style="--i:9"/><path class="edge" d="M50 230L215 200" pathLength="1" style="--i:10"/><circle class="node" cx="50" cy="230" r="6" style="--i:8"/><circle class="node hl" cx="120" cy="130" r="10" style="--i:9"/><circle class="node" cx="215" cy="200" r="7" style="--i:10"/><circle class="node" cx="300" cy="90" r="6" style="--i:11"/><circle class="node hl" cx="370" cy="190" r="11" style="--i:12"/><circle class="node" cx="200" cy="50" r="5" style="--i:13"/><circle class="node" cx="310" cy="265" r="5" style="--i:14"/><circle class="node" cx="60" cy="60" r="5" style="--i:15"/></svg>
+    </div>
+    <div class="sheet">
+      <ul class="facts">
+        <li><span class="fact-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Dura entre 10 y 15 minutos.</li>
+        <li><span class="fact-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></span>Es anónima: no te pedimos nombre ni correo.</li>
+        <li><span class="fact-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18h2"/></svg></span>Puedes responder desde tu celular o tu computadora.</li>
+      </ul>
+      <div class="cta-box">
+        <button type="button" class="btn btn-primary btn-lg" id="startBtn">Comenzar encuesta</button>
+      </div>
+      <p class="fine">Tus respuestas se usan solo en un proyecto del curso Gestión de la Innovación.</p>
+      <p class="config-warn" id="configWarn" role="status" hidden>Falta conectar el formulario con Google Sheets: pega la URL de tu Web App en <b>CONFIG.ENDPOINT_URL</b> (paso 6 del README). Este aviso desaparece solo cuando la URL es válida.</p>
+    </div>
+  </section>
+</template>
+
+<template id="tpl-done">
+  <section class="col" aria-labelledby="dTitle">
+    <div class="card done-card">
+      <svg class="done-svg" viewBox="0 0 200 200" aria-hidden="true"><path class="spoke" d="M150.0 100.0L174.0 100.0" pathLength="1" style="--i:0"/><path class="spoke" d="M125.0 143.3L137.0 164.1" pathLength="1" style="--i:1"/><path class="spoke" d="M75.0 143.3L63.0 164.1" pathLength="1" style="--i:2"/><path class="spoke" d="M50.0 100.0L26.0 100.0" pathLength="1" style="--i:3"/><path class="spoke" d="M75.0 56.7L63.0 35.9" pathLength="1" style="--i:4"/><path class="spoke" d="M125.0 56.7L137.0 35.9" pathLength="1" style="--i:5"/><circle class="sat" cx="182.0" cy="100.0" r="7" style="--i:0"/><circle class="sat" cx="141.0" cy="171.0" r="7" style="--i:1"/><circle class="sat" cx="59.0" cy="171.0" r="7" style="--i:2"/><circle class="sat" cx="18.0" cy="100.0" r="7" style="--i:3"/><circle class="sat" cx="59.0" cy="29.0" r="7" style="--i:4"/><circle class="sat" cx="141.0" cy="29.0" r="7" style="--i:5"/><circle class="core" cx="100" cy="100" r="46"/><path class="tick" d="M80 101L94 115L121 85" pathLength="1"/></svg>
+      <h1 id="dTitle" tabindex="-1">¡Gracias por responder!</h1>
+      <p>Tus respuestas ya están guardadas. Con lo que nos cuentas vamos a entender mejor cómo se conectan los alumnos de la UTP.</p>
+      <p class="code">Código de tu respuesta: <b id="doneCode"></b></p>
+      <button type="button" class="btn btn-ghost" id="againBtn">Registrar otra respuesta</button>
+    </div>
+  </section>
+</template>
+
+<script>
+(() => {
+'use strict';
+
+/* =====================================================================
+   1. CONFIGURACIÓN  (lo único que normalmente necesitas editar)
+   ===================================================================== */
+const CONFIG = {
+  // Pega aquí la URL del Web App de Apps Script (termina en /exec). Ver README, paso 6.
+  ENDPOINT_URL: 'PEGA_AQUI_LA_URL_DEL_WEB_APP',
+
+  FORM_VERSION: '1.0',          // se guarda con cada respuesta
+  OPEN_QUESTIONS_REQUIRED: true, // false = las preguntas de texto libre pasan a ser opcionales
+  MIN_TEXT_LENGTH: 2,
+  REQUEST_TIMEOUT_MS: 30000,    // espera máxima por la respuesta de Google
+  VERIFY_ATTEMPTS: 3,           // intentos de comprobar en la hoja si ya se guardó
+  AUTO_ADVANCE_MS: 260,         // pausa antes de pasar sola tras elegir una opción con el dedo/mouse
+};
+
+/* =====================================================================
+   2. PREGUNTAS  (generadas desde src/schema.py: misma fuente que Code.gs)
+   ===================================================================== */
+const SECTIONS = [
+  {"id": "s1", "title": "Sobre ti", "icon": "user"},
+  {"id": "s2", "title": "Tu red en la universidad", "icon": "users"},
+  {"id": "s3", "title": "Ayuda entre ciclos", "icon": "cap"},
+  {"id": "s4", "title": "Trabajos académicos y encuestas", "icon": "clipboard"},
+  {"id": "s5", "title": "Tu correo UTP", "icon": "mail"},
+  {"id": "s6", "title": "Eventos y comunidades", "icon": "calendar"},
+  {"id": "s7", "title": "Qué usas hoy", "icon": "phone"},
+  {"id": "s8", "title": "Una idea en construcción", "icon": "bulb"}
+];
+const QUESTIONS = [
+  {"key": "p01_carrera", "section": "s1", "type": "text", "label": "¿Qué carrera estudias?", "placeholder": "Escribe el nombre de tu carrera", "maxLen": 160},
+  {"key": "p02_ciclo", "section": "s1", "type": "number", "label": "¿En qué ciclo estás?", "hint": "Escribe solo un número.", "min": 1, "max": 12},
+  {"key": "p03_edad", "section": "s1", "type": "number", "label": "¿Qué edad tienes?", "hint": "Escribe solo un número.", "min": 15, "max": 70},
+  {"key": "p04_modalidad", "section": "s1", "type": "radio", "label": "¿En qué modalidad estudias?", "options": ["Presencial", "Virtual"]},
+  {"key": "p05_sede", "section": "s1", "type": "select", "label": "¿En qué sede estás?", "options": ["Lima Centro", "Lima Norte", "Lima Sur", "Lima Este - SJL", "Lima Este - Ate", "Iquitos", "Tacna", "Pucallpa", "Arequipa", "Chiclayo", "Chimbote", "Piura", "Huancayo", "Ica", "Trujillo"], "placeholder": "Elige tu sede"},
+  {"key": "p06_conocidos_otra_carrera", "section": "s2", "type": "number", "label": "Sin contar a los de tu salón actual, ¿a cuántos alumnos de la UTP has conocido en persona de una carrera distinta a la tuya?", "hint": "Escribe solo un número.", "min": 0, "max": 500},
+  {"key": "p07_ultima_vez_conociste", "section": "s2", "type": "radio", "label": "Sin contar a tu salón, ¿cuándo fue la última vez que conociste a alguien nuevo de la UTP?", "options": ["Esta semana", "Este mes", "Este ciclo", "El ciclo pasado o antes", "Nunca", "No recuerdo"]},
+  {"key": "p08_como_lo_conociste", "section": "s2", "type": "long", "label": "¿Cómo lo conociste?", "maxLen": 600, "when": () => is('p07_ultima_vez_conociste','Esta semana','Este mes','Este ciclo','El ciclo pasado o antes')},
+  {"key": "p09_whatsapp_ciclos_anteriores", "section": "s2", "type": "radio", "label": "¿Qué pasa hoy con tus grupos de WhatsApp de ciclos anteriores?", "options": ["Sigo activo y lo uso", "Sigue activo pero lo silencié", "Ya casi nadie escribe", "Salí del grupo", "Nunca estuve en uno"], "when": () => cicloAtLeast(2)},
+  {"key": "p10_duda_sin_saber_a_quien", "section": "s2", "type": "long", "label": "La última vez que tuviste una duda sobre tu carrera, un curso o un trámite y no sabías a quién preguntar, ¿qué hiciste?", "hint": "También puedes responder «No me ha pasado».", "chips": ["No me ha pasado"], "maxLen": 800},
+  {"key": "p10b_cual_era_la_duda", "section": "s2", "type": "long", "label": "¿Cuál era la duda?", "followup": true, "parent": "p10_duda_sin_saber_a_quien", "maxLen": 600, "when": () => txt('p10_duda_sin_saber_a_quien') !== '' && !chipUsed('p10_duda_sin_saber_a_quien')},
+  {"key": "p11_ultima_ayuda_ciclo_mayor", "section": "s2", "type": "radio", "label": "¿Cuándo fue la última vez que le pediste ayuda a un alumno de un ciclo mayor al tuyo?", "options": ["Esta semana", "Este mes", "Este ciclo", "El ciclo pasado o antes", "Nunca"]},
+  {"key": "p11b_lo_conocia_y_que_pregunto", "section": "s2", "type": "long", "label": "¿Lo conocías de antes? ¿Qué le preguntaste?", "followup": true, "parent": "p11_ultima_ayuda_ciclo_mayor", "maxLen": 600, "when": () => is('p11_ultima_ayuda_ciclo_mayor','Esta semana','Este mes','Este ciclo','El ciclo pasado o antes')},
+  {"key": "p12_quiso_hablar_y_no_hablo", "section": "s2", "type": "long", "label": "La última vez que quisiste hablar con alguien de la UTP que no conocías y no lo hiciste, ¿qué pasó?", "hint": "También puedes responder «No me ha pasado».", "chips": ["No me ha pasado"], "maxLen": 800},
+  {"key": "p13_huecos_con_quien", "section": "s2", "type": "checkbox", "label": "Normalmente en tus huecos de clases ¿Con quiénes la pasas o la pasas solo?", "hint": "Puedes marcar varias.", "other": "Otro", "options": ["Amigos de mi salón", "Gente de otro salón de mi carrera", "Gente de otras carreras", "Solo(a)", "Depende del día"]},
+  {"key": "p14_quiere_conocer_en_huecos", "section": "s2", "type": "radio", "label": "¿Te gustaría conocer gente que también esté libre en sus huecos libres?", "options": ["Sí", "No"]},
+  {"key": "p15_actividad_con_esa_persona", "section": "s2", "type": "checkbox", "label": "¿Qué actividad te gustaría realizar con dicha persona?", "hint": "Puedes marcar varias.", "other": "Otra", "options": ["Estudiar o hacer tareas", "Comer o tomar algo", "Hacer deporte", "Hacer proyectos o emprender", "Solo conversar"], "when": () => is('p14_quiere_conocer_en_huecos','Sí')},
+  {"key": "p16_ayuda_pedida_por_menores", "section": "s3", "type": "number", "label": "Este ciclo, ¿cuántas veces te pidió ayuda un alumno de un ciclo menor al tuyo?", "hint": "Escribe solo un número.", "min": 0, "max": 200, "when": () => cicloAtLeast(5)},
+  {"key": "p16b_amigo_o_desconocido", "section": "s3", "type": "radio", "label": "La última vez, ¿era tu amigo o alguien que no conocías?", "followup": true, "parent": "p16_ayuda_pedida_por_menores", "options": ["Un amigo", "Alguien que conocía de vista o por un grupo", "Alguien que no conocía"], "when": () => cicloAtLeast(5) && num('p16_ayuda_pedida_por_menores') > 0},
+  {"key": "p17_trabajos_con_encuestas", "section": "s4", "type": "number", "label": "¿En cuántos trabajos académicos has necesitado encuestar o entrevistar gente?", "hint": "Escribe solo un número.", "min": 0, "max": 50},
+  {"key": "p18_perfil_especifico", "section": "s4", "type": "radio", "label": "Cuando necesitaste encuestados, ¿buscabas un perfil específico que no tenías cerca?", "options": ["Sí", "No", "No recuerdo"], "when": () => num('p17_trabajos_con_encuestas') > 0},
+  {"key": "p18b_que_perfil_y_que_hizo", "section": "s4", "type": "long", "label": "¿Qué perfil necesitabas y qué hiciste?", "followup": true, "parent": "p18_perfil_especifico", "maxLen": 600, "when": () => num('p17_trabajos_con_encuestas') > 0 && is('p18_perfil_especifico','Sí')},
+  {"key": "p19_como_consiguio_encuestados", "section": "s4", "type": "checkbox", "label": "¿Cómo los conseguiste?", "hint": "Puedes marcar varias.", "other": "Otro", "options": ["Compañeros de mi salón", "Amigos y familia", "Grupos de WhatsApp o redes", "Pidiendo en pasillos y campus", "Ofreciendo algo a cambio"], "when": () => num('p17_trabajos_con_encuestas') > 0},
+  {"key": "p20_como_le_fue_con_respuestas", "section": "s4", "type": "radio", "label": "¿Cómo te fue consiguiendo el número de respuestas que necesitabas?", "options": ["Sin problema", "Me costó mucho", "Entregué con menos de las que pedían", "Tuve que inventar datos"], "when": () => num('p17_trabajos_con_encuestas') > 0},
+  {"key": "p21_que_hizo_si_no_llegaba", "section": "s4", "type": "radio", "label": "¿Qué hiciste cuando no llegabas al número?", "hint": "No hay respuesta correcta o mala, solo buscamos tu sinceridad.", "other": "Otro", "options": ["Seguí buscando hasta completar", "Pedí más tiempo", "Entregué con las que tenía", "Completé algunas yo o con amigos", "Inventé datos"], "when": () => num('p17_trabajos_con_encuestas') > 0 && is('p20_como_le_fue_con_respuestas','Me costó mucho','Entregué con menos de las que pedían','Tuve que inventar datos')},
+  {"key": "p22_encuestas_respondidas", "section": "s4", "type": "number", "label": "¿Cuántas encuestas de otros alumnos has respondido este ciclo?", "hint": "Escribe solo un número.", "min": 0, "max": 200},
+  {"key": "p23_que_lo_motivaria", "section": "s4", "type": "long", "label": "¿Qué te motivaría a responder más encuestas?", "maxLen": 800},
+  {"key": "p24_ultima_vez_outlook", "section": "s5", "type": "radio", "label": "¿Cuándo abriste tu correo Outlook UTP por última vez?", "options": ["Hoy", "Esta semana", "Este mes", "Hace más de un mes", "Nunca lo he abierto"]},
+  {"key": "p25_correos_sin_leer", "section": "s5", "type": "number", "label": "¿Cuántos correos sin leer tienes ahora mismo en tu correo UTP?", "hint": "Escribe solo un número.", "min": 0, "max": 100000},
+  {"key": "p26_programas_que_recuerda", "section": "s5", "type": "long", "label": "Nombra los programas de empleabilidad, concursos, becas o intercambio de la UTP que recuerdes. No vale buscarlos.", "chips": ["No recuerdo ninguno"], "maxLen": 800},
+  {"key": "p27_pertenece_a_grupo", "section": "s6", "type": "radio", "label": "¿Perteneces a algún grupo, club o comunidad de la universidad?", "options": ["Sí", "No"]},
+  {"key": "p27b_por_que_no", "section": "s6", "type": "long", "label": "¿Por qué no?", "followup": true, "parent": "p27_pertenece_a_grupo", "maxLen": 600, "when": () => is('p27_pertenece_a_grupo','No')},
+  {"key": "p28_eventos_este_anio", "section": "s6", "type": "number", "label": "¿A cuántos eventos organizados por la UTP (charlas, talleres, ferias, concursos) has ido este año?", "hint": "Escribe solo un número.", "min": 0, "max": 100},
+  {"key": "p29_que_eventos", "section": "s6", "type": "long", "label": "¿Qué eventos eran? Di todos los que recuerdes", "maxLen": 800, "when": () => num('p28_eventos_este_anio') > 0},
+  {"key": "p30_como_se_entero_evento", "section": "s6", "type": "radio", "label": "¿Cómo te enteraste del último evento al que fuiste?", "other": "Otro", "options": ["Correo UTP", "Instagram", "LinkedIn", "Otra red social", "Grupo de WhatsApp", "Un profesor", "Un amigo o compañero", "Afiche o pantalla en la sede", "No recuerdo"], "when": () => num('p28_eventos_este_anio') > 0},
+  {"key": "p31_actividades_a_difundir", "section": "s6", "type": "checkbox", "label": "¿Qué tipo de actividades extracurriculares te gustaría que se difundan más dentro de la universidad?", "hint": "Puedes marcar hasta 3.", "other": "Otra", "maxChoices": 3, "options": ["Académicas", "Deportivas", "Culturales", "Integración social", "Empleabilidad y prácticas", "Conferencias", "Concursos"]},
+  {"key": "p31b_tipo_conferencias_concursos", "section": "s6", "type": "long", "label": "¿Qué tipo de conferencias o concursos?", "followup": true, "parent": "p31_actividades_a_difundir", "maxLen": 600, "when": () => has('p31_actividades_a_difundir','Conferencias') || has('p31_actividades_a_difundir','Concursos')},
+  {"key": "p32_asistiria_otras_carreras", "section": "s6", "type": "radio", "label": "¿Asistirías a talleres o eventos organizados por alumnos de otras carreras si pudieras acceder fácilmente a su programación?", "options": ["Sí", "No"]},
+  {"key": "p33_arreglar_una_cosa", "section": "s7", "type": "long", "label": "Si pudieras arreglar una sola cosa de cómo te conectas con otros alumnos de la UTP, ¿cuál sería?", "maxLen": 800},
+  {"key": "p34_linkedin", "section": "s7", "type": "radio", "label": "¿Tienes cuenta en LinkedIn?", "other": "Otro", "options": ["Sí, y entro seguido", "Sí, pero casi nunca entro", "No tengo", "No sé qué es"]},
+  {"key": "p34b_por_que_no_linkedin", "section": "s7", "type": "long", "label": "Si no lo usas, ¿por qué no lo usas?", "followup": true, "parent": "p34_linkedin", "maxLen": 600, "when": () => is('p34_linkedin','Sí, pero casi nunca entro','No tengo')},
+  {"key": "info_idea", "section": "s8", "type": "info", "label": "Antes de seguir, lee este texto", "text": "Estamos pensando en una app solo para alumnos de tu universidad. Entras con tu correo institucional y tu nombre real. Puedes preguntarle algo a un alumno de ciclo mayor, unirte a grupos de talleres o comunidades de interés, enterarte de eventos y responder o mandar encuestas de trabajos académicos."},
+  {"key": "p35_app_parecida", "section": "s8", "type": "radio", "label": "¿Hay algo parecido que ya uses actualmente?", "options": ["Sí", "No"]},
+  {"key": "p35b_cual_app", "section": "s8", "type": "text", "label": "¿Cuál?", "followup": true, "parent": "p35_app_parecida", "maxLen": 160, "when": () => is('p35_app_parecida','Sí')},
+  {"key": "p36_que_haria_no_instalar", "section": "s8", "type": "long", "label": "¿Qué tendría que pasar para que NO la instales?", "maxLen": 800},
+  {"key": "p37_acuerdo_nombre_carrera_ciclo", "section": "s8", "type": "long", "label": "¿Estarías de acuerdo con que los alumnos vean tu nombre, carrera y ciclo?", "hint": "Si tu respuesta es «no», cuéntanos por qué y qué te haría decir que sí.", "maxLen": 800},
+  {"key": "p38_funcion_unica", "section": "s8", "type": "radio", "label": "Si solo pudieras tener UNA de estas funciones en una app de la UTP, ¿cuál elegirías?", "options": ["Preguntarle a un alumno de ciclo mayor", "Conocer gente de otras carreras con mis intereses", "Enterarme de clubes y eventos", "Conseguir encuestados para mis trabajos", "Mostrar mis habilidades para prácticas", "Armar equipos multidisciplinarios con gente de otras carreras para proyectos, hackatones o tesis", "Ver proyectos reales y herramientas que usan alumnos de ciclos avanzados para saber qué aprender"]},
+  {"key": "p39_contenido_pantalla_inicial", "section": "s8", "type": "radio", "label": "En la pantalla inicial de la app, ¿qué tipo de contenido te interesaría ver primero?", "options": ["Noticias del campus", "Anuncios de proyectos o de estudio", "Avisos de eventos", "Publicaciones de otros alumnos"]},
+  {"key": "p40_relevancia_filtros", "section": "s8", "type": "radio", "label": "¿Qué tan relevante es para ti que la plataforma cuente con filtros para buscar compañeros según sus aficiones, pasatiempos o intereses específicos?", "scale": true, "options": ["1 - Nada relevante", "2 - Poco relevante", "3 - Algo relevante", "4 - Relevante", "5 - Muy relevante"]},
+  {"key": "p41_crear_eventos", "section": "s8", "type": "radio", "label": "¿Te gustaría contar con la opción de crear y promocionar tus propios eventos o iniciativas estudiantiles dentro de la app?", "options": ["Sí", "No"]},
+  {"key": "p42_momentos_de_uso", "section": "s8", "type": "checkbox", "label": "¿En qué momentos del día o de la semana académica considerarías usar con mayor frecuencia la aplicación?", "hint": "Puedes marcar varias.", "other": "Otro", "options": ["Entre clases", "Camino a la universidad", "En casa por la noche", "Fines de semana", "Semana de exámenes o entregas"]},
+  {"key": "p43_motivo_dejar_de_usar", "section": "s8", "type": "radio", "label": "¿Qué factor principal te llevaría a dejar de usar una app de este tipo?", "other": "Otro", "options": ["Me preocupa mi privacidad", "Hay poca gente y no me sirve", "Me llegan muchos avisos", "Ya uso WhatsApp o Instagram para eso", "Me quita tiempo"]}
+];
+
+/* =====================================================================
+   3. ICONOS (SVG estáticos, sin datos del usuario)
+   ===================================================================== */
+const ICONS = {
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>',
+  users: '<circle cx="9" cy="8" r="3.5"/><path d="M2 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/><circle cx="17" cy="9" r="2.5"/><path d="M18 14c2.4.4 4 2.4 4 5"/>',
+  cap: '<path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/>',
+  clipboard: '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>',
+  calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  phone: '<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18h2"/>',
+  bulb: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',
+  alert: '<circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+};
+function icon(name, extra) {
+  const t = document.createElement('template');
+  t.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"' +
+    (extra ? ' ' + extra : '') + '>' + (ICONS[name] || '') + '</svg>';
+  return t.content.firstChild;
+}
+
+/* =====================================================================
+   4. ESTADO  (solo en memoria: nada se guarda en el navegador)
+   ===================================================================== */
+const state = {
+  screen: 'welcome',          // welcome | steps | done
+  values: {},                 // clave -> texto | arreglo (casillas)
+  others: {},                 // clave -> texto de "Otro"
+  currentKey: null,
+  responseId: newId(),
+  startedAt: null,
+  sending: false,
+  lastError: null,
+};
+const BY_KEY = Object.fromEntries(QUESTIONS.map(q => [q.key, q]));
+const SECTION_BY_ID = Object.fromEntries(SECTIONS.map(s => [s.id, s]));
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const root = document.documentElement;
+const stage = $('#stage');
+let autoTimer = null;
+let lastPointerAt = 0;
+
+/* ---------- utilidades ---------- */
+function newId() {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  b[6] = (b[6] & 0x0f) | 0x40; b[8] = (b[8] & 0x3f) | 0x80;
+  const x = Array.from(b, n => n.toString(16).padStart(2, '0')).join('');
+  return `${x.slice(0, 8)}-${x.slice(8, 12)}-${x.slice(12, 16)}-${x.slice(16, 20)}-${x.slice(20)}`;
+}
+function clean(s) {
+  return String(s == null ? '' : s)
+    .normalize('NFC')
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
+    .replace(/\r\n?/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v === false || v == null) continue;
+    if (k === 'class') el.className = v;
+    else if (k === 'text') el.textContent = v;
+    else if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  kids.flat().forEach(c => { if (c != null && c !== false) el.append(c.nodeType ? c : document.createTextNode(String(c))); });
+  return el;
+}
+const isReduced = () => root.dataset.motion === 'reduced';
+const endpointOk = () =>
+  /^https:\/\/script\.google\.com\/(a\/macros\/[^/]+\/|macros\/)s\/[A-Za-z0-9_-]+\/exec$/.test(CONFIG.ENDPOINT_URL);
+
+/* =====================================================================
+   5. LÓGICA DE VISIBILIDAD (saltos entre preguntas)
+   Estas funciones las usan las condiciones "when" de cada pregunta.
+   ===================================================================== */
+function val(k) { return state.values[k]; }
+function txt(k) { const v = val(k); return typeof v === 'string' ? v.trim() : ''; }
+function num(k) { const t = txt(k); return /^\d+$/.test(t) ? Number(t) : NaN; }
+function is(k, ...opts) { return opts.includes(val(k)); }
+function has(k, o) { const v = val(k); return Array.isArray(v) && v.includes(o); }
+function cicloAtLeast(n) { const c = num('p02_ciclo'); return Number.isNaN(c) || c >= n; } // sin dato aún = se asume que sí
+function chipUsed(k) {
+  const q = BY_KEY[k];
+  return !!q && (q.chips || []).some(c => c.toLowerCase() === txt(k).toLowerCase());
+}
+function isVisible(q) { return !q.when || !!q.when(); }
+function visibleSteps() { return QUESTIONS.filter(isVisible); }
+function nextVisible(key) {
+  const i = QUESTIONS.findIndex(q => q.key === key);
+  for (let j = i + 1; j < QUESTIONS.length; j++) if (isVisible(QUESTIONS[j])) return QUESTIONS[j];
+  return null;
+}
+function prevVisible(key) {
+  const i = QUESTIONS.findIndex(q => q.key === key);
+  for (let j = i - 1; j >= 0; j--) if (isVisible(QUESTIONS[j])) return QUESTIONS[j];
+  return null;
+}
+const isOpenText = q => q.type === 'text' || q.type === 'long';
+const isRequired = q => (isOpenText(q) ? CONFIG.OPEN_QUESTIONS_REQUIRED : true) && q.type !== 'info';
+
+/* =====================================================================
+   6. VALIDACIÓN
+   ===================================================================== */
+function validate(q) {
+  const v = val(q.key);
+  switch (q.type) {
+    case 'info': return '';
+    case 'text':
+    case 'long': {
+      const t = txt(q.key);
+      if (t === '') return isRequired(q) ? 'Escribe tu respuesta para continuar.' : '';
+      if (t.length < CONFIG.MIN_TEXT_LENGTH) return `Escribe al menos ${CONFIG.MIN_TEXT_LENGTH} caracteres.`;
+      return '';
+    }
+    case 'number': {
+      const t = txt(q.key);
+      if (t === '') return 'Escribe un número para continuar.';
+      if (!/^\d+$/.test(t)) return 'Escribe solo un número entero, sin letras ni signos.';
+      const n = Number(t);
+      if (n < q.min || n > q.max) return `Escribe un número entre ${q.min} y ${q.max}.`;
+      return '';
+    }
+    case 'radio':
+    case 'select': {
+      if (!v) return q.type === 'select' ? 'Elige una opción de la lista para continuar.' : 'Elige una opción para continuar.';
+      if (q.other && v === q.other && clean(state.others[q.key]) === '') return `Escribe cuál es tu respuesta en «${q.other}».`;
+      return '';
+    }
+    case 'checkbox': {
+      const arr = Array.isArray(v) ? v : [];
+      if (!arr.length) return 'Elige al menos una opción para continuar.';
+      if (q.maxChoices && arr.length > q.maxChoices) return `Puedes elegir hasta ${q.maxChoices} opciones.`;
+      if (q.other && arr.includes(q.other) && clean(state.others[q.key]) === '') return `Escribe cuál es tu respuesta en «${q.other}».`;
+      return '';
+    }
+  }
+  return '';
+}
+
+/* Valor final que se envía a la hoja (siempre texto o número) */
+function finalValue(q) {
+  const v = val(q.key);
+  const other = () => `${q.other}: ${clean(state.others[q.key]).replace(/\|/g, '/')}`;
+  switch (q.type) {
+    case 'number': return /^\d+$/.test(txt(q.key)) ? Number(txt(q.key)) : '';
+    case 'radio':
+    case 'select': return q.other && v === q.other ? other() : (v || '');
+    case 'checkbox': return (Array.isArray(v) ? v : []).map(o => (q.other && o === q.other ? other() : o));
+    default: return clean(v);
+  }
+}
+
+/* =====================================================================
+   7. PROGRESO ("ruta" de secciones)
+   ===================================================================== */
+function updateProgress(currentKey) {
+  const vis = visibleSteps();
+  const cur = Math.max(0, vis.findIndex(q => q.key === currentKey));
+  const secs = SECTIONS.filter(s => vis.some(q => q.section === s.id));
+  const route = $('#route');
+  const sig = secs.map(s => s.id).join(',');
+  if (route.dataset.sig !== sig) {
+    route.replaceChildren(...secs.map(s => h('li', { 'data-sec': s.id },
+      h('span', { class: 'dot' }),
+      h('span', { class: 'bar' }, h('span', { class: 'fill' })))));
+    route.dataset.sig = sig;
+    // el último nodo no necesita barra
+    const last = route.lastElementChild; if (last) $('.bar', last).remove();
+  }
+  secs.forEach((s, i) => {
+    const idxs = vis.map((q, n) => (q.section === s.id ? n : -1)).filter(n => n >= 0);
+    const first = idxs[0], count = idxs.length;
+    const frac = Math.min(1, Math.max(0, (cur - first) / count));
+    const li = route.children[i];
+    const started = cur >= first;
+    li.classList.toggle('is-started', started);
+    li.classList.toggle('is-current', cur >= first && cur <= idxs[count - 1]);
+    const fill = $('.fill', li);
+    if (fill) fill.style.setProperty('--p', String(cur > idxs[count - 1] ? 1 : frac));
+  });
+  const pct = Math.round((cur / vis.length) * 100);
+  $('#pct').textContent = pct + '%';
+  $('#pbar').setAttribute('aria-valuenow', String(pct));
+}
+
+/* =====================================================================
+   8. PANTALLAS: montaje con transición
+   ===================================================================== */
+function mount(el, dir) {
+  stage.querySelectorAll('.leaving').forEach(n => n.remove());
+  const old = stage.querySelector('.view:not(.leaving)');
+  el.classList.add('view');
+  if (old) {
+    if (isReduced()) old.remove();
+    else {
+      old.classList.add('leaving', dir >= 0 ? 'out-left' : 'out-right');
+      // La pantalla que sale queda 220 ms en el DOM: se le quitan los id para que no haya id repetidos.
+      old.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
+      old.removeAttribute('id');
+      old.inert = true;
+      old.setAttribute('aria-hidden', 'true');
+      setTimeout(() => old.remove(), 220);
+      el.classList.add(dir >= 0 ? 'in-right' : 'in-left');
+    }
+  }
+  stage.append(el);
+  window.scrollTo(0, 0);
+}
+function announce(msg) { const l = $('#live'); l.textContent = ''; setTimeout(() => { l.textContent = msg; }, 30); }
+
+function showWelcome(dir) {
+  clearTimeout(autoTimer);
+  state.screen = 'welcome';
+  $('#progress').hidden = true;
+  const el = $('#tpl-welcome').content.firstElementChild.cloneNode(true);
+  $('#startBtn', el).addEventListener('click', start);
+  if (!endpointOk()) $('#configWarn', el).hidden = false;
+  mount(el, dir);
+  $('#wTitle', el).focus({ preventScroll: true });
+}
+
+function start() {
+  if (!state.startedAt) state.startedAt = Date.now();
+  state.screen = 'steps';
+  $('#progress').hidden = false;
+  goTo(state.currentKey && isVisible(BY_KEY[state.currentKey]) ? state.currentKey : visibleSteps()[0].key, 1);
+}
+
+function showDone() {
+  clearTimeout(autoTimer);
+  state.screen = 'done';
+  $('#progress').hidden = true;
+  const el = $('#tpl-done').content.firstElementChild.cloneNode(true);
+  $('#doneCode', el).textContent = state.responseId.slice(0, 8).toUpperCase();
+  $('#againBtn', el).addEventListener('click', resetAll);
+  mount(el, 1);
+  $('#dTitle', el).focus({ preventScroll: true });
+  announce('Tus respuestas se guardaron correctamente. ¡Gracias por responder!');
+}
+
+function resetAll() {
+  state.values = {}; state.others = {}; state.currentKey = null;
+  state.responseId = newId(); state.startedAt = null; state.sending = false; state.lastError = null;
+  $('#hp').value = '';
+  showWelcome(-1);
+}
+
+/* =====================================================================
+   9. PREGUNTA (una por pantalla)
+   ===================================================================== */
+function goTo(key, dir) {
+  clearTimeout(autoTimer);
+  const q = BY_KEY[key];
+  state.currentKey = key;
+  state.lastError = null;
+  const el = buildStep(q);
+  mount(el, dir);
+  updateProgress(key);
+
+  const vis = visibleSteps();
+  const questions = vis.filter(x => x.type !== 'info');
+  const n = questions.findIndex(x => x.key === key) + 1;
+  announce(q.type === 'info'
+    ? `${SECTION_BY_ID[q.section].title}. ${q.label}.`
+    : `Pregunta ${n} de ${questions.length}. ${SECTION_BY_ID[q.section].title}. ${q.label}`);
+
+  const title = $('.q-title', el);
+  const fine = window.matchMedia('(pointer: fine)').matches;
+  const fieldEl = $('.field', el);
+  const first = fieldEl && $('input[type="text"], textarea', fieldEl);
+  if (fine && first && !first.hidden) first.focus({ preventScroll: true });
+  else title.focus({ preventScroll: true });
+}
+
+function buildStep(q) {
+  const sec = SECTION_BY_ID[q.section];
+  const vis = visibleSteps();
+  const questions = vis.filter(x => x.type !== 'info');
+  const n = questions.findIndex(x => x.key === q.key) + 1;
+  const isLast = !nextVisible(q.key);
+
+  const titleId = 'qt-' + q.key, hintId = 'qh-' + q.key, errId = 'qe-' + q.key;
+  const error = h('p', { class: 'error', id: errId, role: 'alert' });
+  const field = h('div', { class: 'field' });
+  const describedBy = [q.hint ? hintId : null, errId].filter(Boolean).join(' ');
+
+  const head = h('div', { class: 'step-head' },
+    h('span', { class: 'sec' }, h('span', { class: 'sec-ic' }, icon(sec.icon)), h('span', { text: sec.title })),
+    h('span', { class: 'count', text: q.type === 'info' ? '' : `Pregunta ${n} de ${questions.length}` }));
+
+  const card = h('div', { class: 'card' });
+  if (q.followup) {
+    card.append(h('span', { class: 'tag', text: 'Seguimiento' }));
+    const parent = BY_KEY[q.parent];
+    if (parent) {
+      const pv = ['radio', 'select', 'checkbox', 'number'].includes(parent.type) ? answerText(parent) : '';
+      card.append(h('p', { class: 'context' }, parent.label, pv ? [' ', h('b', { text: `Tu respuesta: ${pv}.` })] : null));
+    }
+  }
+  card.append(h('h2', { class: 'q-title', id: titleId, tabindex: '-1', text: q.label }));
+  if (q.hint) card.append(h('p', { class: 'hint', id: hintId, text: q.hint }));
+
+  if (q.type === 'info') {
+    card.append(h('p', { class: 'idea', text: q.text }));
+  } else {
+    fillField(q, field, { titleId, describedBy, error });
+    card.append(field);
+  }
+  card.append(error);
+
+  const prevBtn = h('button', { type: 'button', class: 'btn btn-ghost', id: 'prevBtn', text: 'Anterior' });
+  const nextBtn = h('button', { type: 'submit', class: 'btn btn-primary', id: 'nextBtn',
+    text: isLast ? 'Enviar respuestas' : (q.type === 'info' ? 'Entendido, continuar' : 'Siguiente') });
+  prevBtn.addEventListener('click', () => { if (!state.sending) prev(); });
+  const actions = h('div', { class: 'actions' }, prevBtn, nextBtn);
+
+  const form = h('form', { class: 'col', novalidate: true, 'aria-labelledby': titleId }, head, card, actions);
+  form.addEventListener('submit', e => { e.preventDefault(); next(); });
+  form.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && e.target.tagName === 'TEXTAREA') { e.preventDefault(); form.requestSubmit(); }
+  });
+  return form;
+}
+
+function answerText(q) {
+  const v = finalValue(q);
+  return Array.isArray(v) ? v.join(', ') : String(v);
+}
+
+function showError(form, msg, detail) {
+  const err = $('.error', form);
+  err.replaceChildren(icon('alert'), h('span', null, msg, detail ? h('small', { text: detail }) : null));
+  err.classList.add('show');
+  err.classList.remove('shake'); void err.offsetWidth; err.classList.add('shake');
+  err.scrollIntoView({ block: 'nearest', behavior: isReduced() ? 'auto' : 'smooth' });  // que no lo tape la barra de botones
+  form.querySelectorAll('.input, .select, .textarea').forEach(i => i.classList.add('is-bad'));
+  form.querySelectorAll('.input, .select, .textarea').forEach(i => i.setAttribute('aria-invalid', 'true'));
+}
+function clearError(form) {
+  const err = $('.error', form);
+  if (!err) return;
+  err.classList.remove('show', 'shake');
+  err.replaceChildren();
+  form.querySelectorAll('.is-bad').forEach(i => i.classList.remove('is-bad'));
+  form.querySelectorAll('[aria-invalid]').forEach(i => i.removeAttribute('aria-invalid'));
+}
+const curForm = () => stage.querySelector('.view:not(.leaving)');
+
+/* ---------- campos por tipo ---------- */
+function fillField(q, field, ctx) {
+  const form = () => field.closest('form');
+  const touch = () => { clearTimeout(autoTimer); if (form()) clearError(form()); };
+
+  if (q.type === 'text' || q.type === 'long' || q.type === 'number') {
+    const isNum = q.type === 'number';
+    const attrs = {
+      id: 'in-' + q.key, 'aria-labelledby': ctx.titleId, 'aria-describedby': ctx.describedBy,
+      autocomplete: 'off', maxlength: isNum ? String(String(q.max).length) : String(q.maxLen || 160),
+      placeholder: q.placeholder || null,
+    };
+    let input;
+    if (q.type === 'long') input = h('textarea', { ...attrs, class: 'textarea', rows: '4', spellcheck: 'true' });
+    else if (isNum) input = h('input', { ...attrs, class: 'input num', type: 'text', inputmode: 'numeric', pattern: '[0-9]*', enterkeyhint: 'next' });
+    else input = h('input', { ...attrs, class: 'input', type: 'text', enterkeyhint: 'next' });
+    input.value = state.values[q.key] || '';
+
+    let counter = null;
+    if (q.type === 'long') counter = h('span', { class: 'counter', 'aria-hidden': 'true' });
+    const upd = () => { if (counter) counter.textContent = `${input.value.length}/${q.maxLen}`; };
+    input.addEventListener('input', () => {
+      if (isNum) { const c = input.value.replace(/\D+/g, ''); if (c !== input.value) input.value = c; }
+      state.values[q.key] = input.value;
+      upd(); touch();
+    });
+    field.append(input);
+    if (counter) { upd(); field.append(counter); }
+
+    if (q.chips && q.chips.length) {
+      field.append(h('div', { class: 'chips' }, q.chips.map(c =>
+        h('button', { type: 'button', class: 'chip', text: c, onclick: () => {
+          input.value = c; state.values[q.key] = c; upd(); touch(); input.focus({ preventScroll: true });
+        } }))));
+    }
+    return;
+  }
+
+  if (q.type === 'select') {
+    const sel = h('select', { class: 'select', id: 'in-' + q.key, 'aria-labelledby': ctx.titleId, 'aria-describedby': ctx.describedBy },
+      h('option', { value: '', text: q.placeholder || 'Elige una opción', disabled: true, selected: !state.values[q.key] }),
+      q.options.map(o => h('option', { value: o, text: o, selected: state.values[q.key] === o })));
+    sel.addEventListener('change', () => { state.values[q.key] = sel.value; touch(); });
+    field.append(sel);
+    return;
+  }
+
+  if (q.type === 'radio' || q.type === 'checkbox') {
+    const multi = q.type === 'checkbox';
+    const kind = multi ? 'checkbox' : 'radio';
+    const list = h('div', { class: 'opts', role: multi ? 'group' : 'radiogroup', 'aria-labelledby': ctx.titleId, 'aria-describedby': ctx.describedBy });
+    const all = q.options.concat(q.other ? [q.other] : []);
+    const cur = val(q.key);
+    const otherIn = q.other ? h('input', {
+      type: 'text', class: 'input other-in', maxlength: '80', autocomplete: 'off',
+      'aria-label': `Escribe cuál (${q.other})`, placeholder: 'Escribe cuál'
+    }) : null;
+    if (otherIn) {
+      otherIn.value = state.others[q.key] || '';
+      otherIn.addEventListener('input', () => { state.others[q.key] = otherIn.value; touch(); });
+    }
+    const showOther = () => {
+      if (!otherIn) return;
+      const on = multi ? (Array.isArray(val(q.key)) && val(q.key).includes(q.other)) : val(q.key) === q.other;
+      otherIn.hidden = !on;
+    };
+    const syncLimit = () => {
+      if (!multi || !q.maxChoices) return;
+      const chosen = Array.isArray(val(q.key)) ? val(q.key).length : 0;
+      list.querySelectorAll('input').forEach(i => { i.disabled = chosen >= q.maxChoices && !i.checked; });
+    };
+
+    all.forEach((opt, i) => {
+      const id = `${q.key}__${i}`;
+      const checked = multi ? (Array.isArray(cur) && cur.includes(opt)) : cur === opt;
+      const input = h('input', { type: kind, name: q.key, id, value: opt, checked: checked || null });
+      const mark = h('span', { class: 'mark' }, icon('check'));
+      const label = h('label', { class: 'opt' + (multi ? ' is-check' : ''), for: id },
+        input, h('span', { class: 'opt-body' }, mark, h('span', { class: 'opt-text', text: opt })));
+      list.append(label);
+    });
+
+    list.addEventListener('pointerdown', () => { lastPointerAt = performance.now(); });
+    list.addEventListener('change', e => {
+      const t = e.target;
+      if (t.name !== q.key) return;
+      touch();
+      if (multi) {
+        const set = new Set(Array.isArray(val(q.key)) ? val(q.key) : []);
+        t.checked ? set.add(t.value) : set.delete(t.value);
+        state.values[q.key] = q.options.concat(q.other ? [q.other] : []).filter(o => set.has(o)); // conserva el orden
+        syncLimit();
+      } else {
+        state.values[q.key] = t.value;
+      }
+      showOther();
+      if (otherIn && !otherIn.hidden && t.checked) otherIn.focus({ preventScroll: true });
+      // pasar sola a la siguiente: solo opción única, con puntero, sin "Otro" y sin ser la última
+      const pointer = performance.now() - lastPointerAt < 700;
+      if (!multi && pointer && !(q.other && t.value === q.other) && nextVisible(q.key)) {
+        autoTimer = setTimeout(() => { if (state.currentKey === q.key && !state.sending) next(); }, CONFIG.AUTO_ADVANCE_MS);
+      }
+    });
+
+    field.append(list);
+    if (otherIn) field.append(otherIn);
+    showOther(); syncLimit();
+  }
+}
+
+/* =====================================================================
+   10. NAVEGACIÓN
+   ===================================================================== */
+function next() {
+  if (state.sending) return;
+  clearTimeout(autoTimer);
+  const q = BY_KEY[state.currentKey];
+  const form = curForm();
+  const err = validate(q);
+  if (err) { showError(form, err); focusInvalid(form); return; }
+  const nx = nextVisible(q.key);
+  if (!nx) { submitAll(); return; }
+  goTo(nx.key, 1);
+}
+function prev() {
+  clearTimeout(autoTimer);
+  const pv = prevVisible(state.currentKey);
+  if (!pv) { showWelcome(-1); return; }
+  goTo(pv.key, -1);
+}
+function focusInvalid(form) {
+  const bad = $('.is-bad', form) || $('input', form);
+  if (bad) bad.focus({ preventScroll: true });
+}
+
+/* =====================================================================
+   11. ENVÍO A GOOGLE SHEETS (vía Apps Script)
+   Flujo: validar todo -> POST -> leer la confirmación del servidor.
+   Si no se puede leer la respuesta (red/CORS), se comprueba en la hoja
+   con una consulta aparte antes de dar nada por guardado.
+   ===================================================================== */
+function buildPayload() {
+  const respuestas = {};
+  for (const q of QUESTIONS) {
+    if (q.type === 'info') continue;
+    respuestas[q.key] = isVisible(q) ? finalValue(q) : (q.type === 'checkbox' ? [] : '');
+  }
+  return {
+    version: CONFIG.FORM_VERSION,
+    id: state.responseId,
+    duracion_seg: Math.max(0, Math.round((Date.now() - (state.startedAt || Date.now())) / 1000)),
+    hp: $('#hp').value,
+    respuestas,
+  };
+}
+
+function setSending(on) {
+  state.sending = on;
+  const form = curForm();
+  if (!form) return;
+  const nextBtn = $('#nextBtn', form), prevBtn = $('#prevBtn', form);
+  form.setAttribute('aria-busy', on ? 'true' : 'false');
+  prevBtn.disabled = on;
+  nextBtn.disabled = on;
+  if (on) nextBtn.replaceChildren(h('span', { class: 'spinner', 'aria-hidden': 'true' }), 'Enviando…');
+  else nextBtn.textContent = state.lastError ? 'Reintentar envío' : 'Enviar respuestas';
+  form.querySelectorAll('input, textarea, select, .chip').forEach(i => { i.disabled = on || i.dataset.keepDisabled === '1'; });
+}
+
+async function submitAll() {
+  if (state.sending) return;                       // evita envíos duplicados por doble clic
+  const form = curForm();
+
+  // 1) Revalidar todas las preguntas visibles
+  for (const q of visibleSteps()) {
+    const e = validate(q);
+    if (e) { goTo(q.key, -1); setTimeout(() => showError(curForm(), e), 60); return; }
+  }
+  // 2) Revisar que el formulario esté conectado
+  if (!endpointOk()) {
+    state.lastError = 'config';
+    showError(form, 'El formulario todavía no está conectado a Google Sheets.',
+      'Falta pegar la URL del Web App en CONFIG.ENDPOINT_URL (README, paso 6). Tus respuestas siguen aquí.');
+    return;
+  }
+
+  clearError(form);
+  state.lastError = null;
+  setSending(true);
+  const payload = buildPayload();
+
+  try {
+    const result = await sendAndConfirm(payload);
+    if (result.ok) { setSending(false); showDone(); return; }
+    state.lastError = result.code;
+    setSending(false);
+    showError(curForm(), result.message, `Código: ${result.code}. Tus respuestas siguen aquí; puedes reintentar sin que se dupliquen.`);
+    $('#nextBtn', curForm()).textContent = 'Reintentar envío';
+  } catch (e) {
+    console.error(e);
+    state.lastError = 'E_INTERNO';
+    setSending(false);
+    showError(curForm(), 'Ocurrió un problema inesperado al enviar.', 'Código: E_INTERNO. Tus respuestas siguen aquí; puedes reintentar.');
+    $('#nextBtn', curForm()).textContent = 'Reintentar envío';
+  }
+}
+
+async function sendAndConfirm(payload) {
+  let serverReply = null;
+  try {
+    serverReply = await postJson(payload);
+  } catch (e) {
+    console.warn('No se pudo leer la respuesta del servidor:', e);
+  }
+
+  if (serverReply && typeof serverReply === 'object') {
+    if (serverReply.ok === true && serverReply.id === payload.id) return { ok: true };
+    if (serverReply.ok === false) {
+      return { ok: false, code: 'E_' + String(serverReply.error || 'SERVIDOR').toUpperCase().slice(0, 20),
+               message: String(serverReply.mensaje || 'El servidor no pudo guardar tus respuestas.') };
+    }
+  }
+
+  // No hubo confirmación legible (red, CORS, tiempo agotado...). Comprobamos en la hoja.
+  let unknown = true;
+  for (let i = 0; i < CONFIG.VERIFY_ATTEMPTS; i++) {
+    await sleep(i === 0 ? 900 : 1800 * i);
+    const exists = await checkSaved(payload.id);
+    if (exists === true) return { ok: true };
+    if (exists === false) unknown = false;
+  }
+  return unknown
+    ? { ok: false, code: 'E_SIN_CONFIRMAR',
+        message: 'No pudimos confirmar que tus respuestas se guardaron. Revisa tu conexión e inténtalo de nuevo.' }
+    : { ok: false, code: 'E_NO_GUARDADO',
+        message: 'Tus respuestas no se guardaron. Inténtalo de nuevo en unos segundos.' };
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function postJson(payload) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), CONFIG.REQUEST_TIMEOUT_MS);
+  try {
+    // text/plain evita la consulta previa (preflight) que Apps Script no responde.
+    const res = await fetch(CONFIG.ENDPOINT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+      redirect: 'follow', credentials: 'omit', cache: 'no-store', signal: ctrl.signal,
+    });
+    const text = await res.text();
+    return JSON.parse(text);           // si no es JSON (p. ej. página de inicio de sesión), lanza error
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/* Consulta de solo lectura que no depende de CORS (JSONP): ¿ya existe esta respuesta en la hoja? */
+function checkSaved(id) {
+  return new Promise(resolve => {
+    const cb = '__kampusCheck_' + Math.random().toString(36).slice(2);
+    const s = document.createElement('script');
+    let done = false;
+    const finish = v => { if (done) return; done = true; clearTimeout(timer); delete window[cb]; s.remove(); resolve(v); };
+    window[cb] = data => finish(data && data.ok === true ? !!data.existe : null);
+    s.onerror = () => finish(null);
+    const timer = setTimeout(() => finish(null), 12000);
+    s.src = `${CONFIG.ENDPOINT_URL}?action=check&id=${encodeURIComponent(id)}&callback=${cb}&_=${Date.now()}`;
+    document.head.append(s);
+  });
+}
+
+/* =====================================================================
+   12. ARRANQUE
+   ===================================================================== */
+function initMotion() {
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const btn = $('#motionBtn'), sr = $('#motionSr');
+  let manual = false;
+  const apply = reduced => {
+    root.dataset.motion = reduced ? 'reduced' : 'full';
+    btn.setAttribute('aria-pressed', String(reduced));
+    sr.textContent = reduced ? ' (activado)' : ' (desactivado)';
+  };
+  apply(mq.matches);
+  mq.addEventListener('change', e => { if (!manual) apply(e.matches); });
+  btn.addEventListener('click', () => { manual = true; apply(!isReduced()); });
+}
+
+window.addEventListener('beforeunload', e => {
+  const hasProgress = Object.keys(state.values).length > 0;
+  if (state.sending || (state.screen === 'steps' && hasProgress)) { e.preventDefault(); e.returnValue = ''; }
+});
+
+initMotion();
+showWelcome(1);
+if (!endpointOk()) console.warn('[Kampus] ENDPOINT_URL no está configurada: el formulario no enviará datos hasta que la pegues.');
+})();
+</script>
+</body>
+</html>
